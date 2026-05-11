@@ -1,0 +1,57 @@
+# MIMIR — Default Neural Velocity Field configuration
+# Used by scripts/20_train_neural_velocity_field.py
+#
+# All units: km, km/s. Domain is a 2D vertical slice 10x10 km by default.
+
+experiment:
+  name: nvf_default
+  seed: 20260507             # reproducibility
+  device: auto                # auto | cuda | mps | cpu
+  out_dir: ./logs/nvf_default
+
+data:
+  benchmark: gaussian_anomaly  # gaussian_anomaly | layered | curvefault | flatfault
+  domain_x: [0.0, 10.0]        # km
+  domain_z: [0.0, 10.0]        # km
+  grid: 128                    # grid for ground-truth and visualization
+
+  # Acquisition geometry — both walls + top + bottom (cross-well + surface)
+  source_layout: cross         # cross | surface | borehole
+  n_sources_per_side: 12       # how dense the source rings are
+  n_receivers_per_side: 12
+
+  noise_pct: 5.0               # additive Gaussian noise on observed travel times (% of clean tt)
+
+field:
+  base_velocity: 3.0           # km/s, the constant we pivot around
+  velocity_range: [2.0, 5.5]   # bounds enforced via scaled sigmoid
+  fourier_dim: 64              # number of random Fourier features
+  fourier_scale: 4.0           # std of B matrix; tune per-domain
+  hidden: 128                  # MLP width
+  depth: 4                     # MLP depth
+  activation: tanh             # tanh | gelu | leaky_relu
+
+physics:
+  ray_solver: straight         # straight | curved (curved enables training-time refinement)
+  ray_samples: 64              # number of integration points per ray
+
+loss:
+  data_loss: huber             # mse | huber | l1
+  huber_delta: 0.05
+  smoothness_weight: 1.0e-3    # TV regularizer
+  range_weight: 0.0            # additional bound penalty (already implicit via sigmoid)
+
+training:
+  iterations: 8000
+  optimizer: adam
+  learning_rate: 2.0e-3
+  lr_schedule: cosine          # constant | cosine | step
+  warmup_iters: 200
+  grad_clip: 1.0
+  val_every: 100               # iterations
+  save_best: true              # save best-val-RMSE checkpoint
+  log_every: 50
+
+evaluation:
+  metrics: [rmse, mae, ssim, pearson]
+  bootstrap_seeds: 5           # multi-seed for paper-quality stats

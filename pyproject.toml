@@ -1,0 +1,69 @@
+[project]
+name = "mimir"
+version = "0.1.0"
+description = "MIMIR — Multi-physics Implicit Inversion via Implicit Representation. IVXA flagship for differentiable geophysical inverse problems."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [{ name = "IVXA", email = "" }]
+keywords = ["geophysics", "inverse-problems", "neural-fields", "tomography", "physics-informed-ml"]
+
+dependencies = [
+    # core scientific stack
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "matplotlib>=3.8",
+    "h5py>=3.10",
+    "pyyaml>=6.0",
+    "tqdm>=4.66",
+
+    # deep learning (PyTorch as canonical backend; MLX bridge optional later)
+    "torch>=2.2",
+
+    # eikonal / FMM baseline
+    "scikit-fmm>=2024.5.29",
+
+    # metrics
+    "scikit-image>=0.22",  # SSIM, PSNR
+    "scikit-learn>=1.4",   # for conformal prediction wrappers
+
+    # logging
+    "tensorboard>=2.16",
+
+    # config management
+    "omegaconf>=2.3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=4.1",
+    "ruff>=0.5",
+    "ipython>=8.20",
+    "jupyter>=1.0",
+]
+
+# Real-data ingest (optional; pull when needed)
+realdata = [
+    "obspy>=1.4",       # FDSN / Hi-net / F-net waveform IO
+    "pyrocko>=2024.1",  # moment tensor utilities
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mimir"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "B", "UP", "RUF"]
+ignore = ["E501"]  # line length handled by formatter
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --strict-markers"

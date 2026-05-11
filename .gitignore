@@ -1,0 +1,105 @@
+# ============================================================================
+# .gitignore for MIMIR
+# ============================================================================
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+*.pyc
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+.python-version
+uv.lock
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.spyderproject
+.spyproject
+
+# OS metadata
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+__MACOSX/
+
+# MIMIR run artifacts (regenerable from scripts)
+data/synthetic/
+data/raw/
+logs/
+models/
+PDF/*.pdf
+!PDF/.gitkeep
+
+# Manuscript build artifacts
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.log
+paper/*.out
+paper/*.toc
+paper/*.synctex.gz
+paper/manuscript.pdf
+
+# Large data files (per-benchmark cached arrays etc.)
+*.npz
+*.npy
+*.h5
+*.hdf5
+!data/synthetic/.gitkeep
+
+# Model checkpoints
+*.pt
+*.pth
+*.ckpt
+
+# Profiling and debug
+*.prof
+*.pdb
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Environment variables / secrets
+.env
+.env.local
+*.pem
+*.key
+
+# Maintainer-only files (do not publish)
+PUBLISHING.md
+prepare_github_release.sh
+RELEASE_REPORT.txt
+mimir_release/
+mimir_release.zip
